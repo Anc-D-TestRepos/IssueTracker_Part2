@@ -1,0 +1,26 @@
+.inputData div {
+	margin:0 0 0 40%;
+	padding: 15px 0;
+	
+}
+.inputData input, select {
+	
+	width: 250px;
+}
+.title {
+	margin:0 0 0 40%;
+	padding:  0 15px;
+	width: 250px;
+	text-align: center;
+}
+.button input{
+	margin: 0 auto;
+	width: 90px;
+}
+.button {
+	text-align: center;
+	width: 250px;
+}
+.back {
+	text-align: center;
+}

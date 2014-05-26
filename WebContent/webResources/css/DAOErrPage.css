@@ -1,0 +1,26 @@
+.text {
+	text-align:center;
+	padding-top: 10%;
+	font-size: 18px;
+	font-weight: bold;
+	color: red; 
+	 
+	
+}
+.cause {
+	text-align:center;
+	margin-left: -20px;
+	padding-top: 1%;
+	font-size: 18px;
+}
+.cause span{
+	font-size: 20px;
+	
+}
+body a{
+	display: block;
+	text-align:center;
+	
+	padding-top: 20px;
+
+}

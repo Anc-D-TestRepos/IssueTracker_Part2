@@ -1,0 +1,96 @@
+body , html {
+	
+	height: 100%;
+}
+body {
+	margin:0;
+	font-size: 20px;
+}
+p {
+	margin: 75px 0 20px 0;
+	text-align:center;
+	
+}
+a {
+	text-decoration: none;
+}
+.content {
+	min-height: 100%;
+	margin-bottom: -100px;
+	padding-bottom: 100px;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	
+	
+}
+.footer{
+	background: #E7F1F5;
+	height: 100px;
+}
+.id {
+	text-align: center;
+}
+div.user {
+	font-size: 15px;
+	margin: 0 0 0 10px;
+}
+span.name {
+	font-size: 20px;
+	font-weight: 500;
+	margin: 0 0 0 10px;
+}
+span.logout{
+	font-size: 15px;
+	font-weight: 500;
+	margin: 0 0 0 10px;
+}
+span.chngData,span.chngPass {
+	font-size: 15px;
+}
+span.chngData {
+	margin: 10px 0 0 10px;
+}
+span.chngPass {
+	margin: 0 0 0 10px;
+}
+div.button {
+	display: table-cell;
+	text-align: left;
+	padding: 0 25px 0 0;
+}
+div.links a{	
+	float: right;
+	margin: 0 20px;
+}
+div.links {	
+	margin: 10px 20px;
+}
+div.addLinks a {	
+	
+	float: left;
+	margin: 35px 20px  0 20px;
+}
+div.userAction a {
+		
+	float: right;
+	
+	margin: 15px 20px  0 20px;
+
+}
+.defectList table {	
+	border: solid 1px;
+	border-spacing: 0px;
+	width: 100%;
+	margin: 40px 0 0 0 ;
+}
+.defectList table td,th {
+	border-collapse: collapse;
+	height: 25px;
+	border: solid 1px;
+	
+}
+.createIssue , .searchIssue {
+	display: inline-block;
+
+}
+						

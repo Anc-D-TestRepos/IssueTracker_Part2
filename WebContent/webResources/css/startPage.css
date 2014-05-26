@@ -1,0 +1,53 @@
+body {
+	font-size: 20px;
+	border solid 1px red;
+}
+a {
+	text-decoration: none;
+}
+.role {
+	font-weight: bold;
+	font-size: 20px;
+}
+.description ,  {
+	margin: 50px 0 0 10px;
+	font-size: 17px;
+}
+.inputData {
+	text-align: center;
+	display: inline-block;
+}
+.id {
+	text-align: center;
+}
+span.email {
+	padding: 10px;
+}
+span.pass {
+	padding: 11px;
+}
+div.email {
+	padding: 10px;
+	display: inline-block;
+}
+div.pass {
+	padding: 10px;
+	display: inline-block;
+}
+div.button {
+	display: inline-block;
+	padding: 0;
+	margin:  10px 0 0 0;
+}
+.defectList table {
+	border: solid 1px;
+	border-spacing: 0px;
+	width: 100%;
+	margin: 40px 0 0 0 ;
+}
+.defectList table td,th {
+	border-collapse: collapse;
+	height: 25px;
+	border: solid 1px;
+}
+			

@@ -1,0 +1,54 @@
+body{
+	width: 100%;
+	
+}
+.inputData {
+	
+	margin: 0 auto;
+	width: 400px;
+	
+}
+span.firstDescr {
+	padding: 10px;
+}
+span.lastDescr {
+	padding: 11px;
+}
+span.emailDescr {
+	padding: 11px ;
+
+}
+span.roleDescr {
+	padding: 11px ;
+
+}
+div.firstName {
+	padding: 10px;
+
+}
+div.lastName {
+	padding: 10px;
+	
+}
+div.email {
+	padding: 10px ;
+	
+	
+}
+div.role {
+	padding: 10px ;
+	
+	
+}
+div.button {
+	
+text-align: center;
+	margin:  0 auto;
+}
+.description {
+	text-align: center;
+	font-size: 17px;
+}
+.firstName input , .lastName input , .email input , .role input {
+	width: 250px;
+}
