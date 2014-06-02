@@ -34,11 +34,11 @@ div.email {
 }
 div.button {
 	
-text-align: center;
+	padding: 30px 0 0 100px;
 	margin:  0 auto;
 }
 .description {
-	text-align: center;
+	padding:70px 0 30px 50px;
 	font-size: 17px;
 }
 .firstInput input , .lastInput input , .email input {

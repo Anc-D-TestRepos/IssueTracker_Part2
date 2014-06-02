@@ -16,15 +16,20 @@ import org.training.issueTracker.beans.Issue;
 import org.training.issueTracker.beans.Employee;
 import org.training.issueTracker.service.DAO.DAOInterfaces.DAOInterface;
 import org.training.issueTracker.service.DAO.JDBC.DBImplDAO;
+import org.training.issueTracker.service.DAO.exceptions.DAOException;
 
 /**
  * Servlet implementation class ChangeUserDataByAdmin
  */
 @WebServlet("/ChangeUserDataByAdmin")
 public class ChangeUserDataByAdmin extends HttpServlet {
+private static final long serialVersionUID = 1L;
 	
-	private final String EMPLOYEE = "employee";
-
+	private final String USER ="user";
+	private final String CAUSE = "cause";
+	private final String SCSFL_PAGE = "/scssfulAddingData.jsp";
+	private final String DAO_ERROR_PAGE = "/DAOErrPage.jsp";	
+	
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -50,35 +55,48 @@ public class ChangeUserDataByAdmin extends HttpServlet {
 
 	
 	protected void performTask(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-	
+		
+		System.out.println("Hello from UserDataEditingByAdminController");
 
 		HttpSession session = req.getSession();
-	
+				
 		
+		String firstName = null;
+		String lastName = null;
+		String role = null;
+		String email = null;
+		Employee user = null;
+		DAOInterface dataSetter = new DBImplDAO();
 		
-		
-		Employee employee = (Employee) session.getAttribute(EMPLOYEE);
-		System.out.println(employee);
+		try {
 			
-		String fName= req.getParameter("firstName");
-		System.out.println(fName);
-		
-		String lName= req.getParameter("lastName");
-		System.out.println(lName);
-		
-		String email= req.getParameter("email");
-		System.out.println(email);
-		
-		String role= req.getParameter("role");
-		System.out.println(role);
-		
-		session.setAttribute(EMPLOYEE, employee);
-	
-		if(true){
-			jump("scssfulAddingDataByAdmin.jsp",req,res);
-		}else {
-			jumpError("errAddingDataByAdmin.jsp","not all field filled",req,res);
+			firstName = (String)req.getParameter("first_name");		
+			lastName = (String)req.getParameter("last_name");		
+			role = (String)req.getParameter("role");		
+			email = (String)req.getParameter("email");		
+			System.out.println(firstName);
+			System.out.println(lastName);
+			System.out.println(role);
+			System.out.println(email);
+			user = new Employee();
+			
+			user.setFirstName(firstName);
+			user.setLastName(lastName);
+			user.setRole(role);
+			user.setEmail(email);
+			System.out.println(user.toString());
+				
+			dataSetter.replaceUserDataByAdmin(user);
+			
+			
+						
+		} catch (DAOException | ClassNotFoundException e) {
+			session.setAttribute(CAUSE, "problem with connection to database");
+			jump(DAO_ERROR_PAGE,req,res);
+			return;
 		}
+			jump(SCSFL_PAGE,req,res);
+		
 	
 		
 	}
@@ -90,12 +108,5 @@ public class ChangeUserDataByAdmin extends HttpServlet {
 			rd.forward(req, resp);
 			
 		}
-	private void jumpError( String url, String cause, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
-		
-		RequestDispatcher rd = getServletContext().getRequestDispatcher(url);
-		
-		rd.forward(req, resp);
-		
-	}
 	
 }

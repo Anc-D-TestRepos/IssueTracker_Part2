@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.training.issueTracker.beans.Employee;
 import org.training.issueTracker.service.DAO.DAOInterfaces.DAOInterface;
 import org.training.issueTracker.service.DAO.JDBC.DBImplDAO;
@@ -29,6 +30,7 @@ public class Authentification extends HttpServlet {
 	private final String LAST_NAME = "lastName";
 	private final String ADMIN = "admin";
 	private final String USER = "user";
+	private final String CAUSE = "cause";
 	private final String ADMIN_CONTROLLER = "/AuthorizedAdmin";
 	private final String USER_CONTROLLER = "/AuthorizedUser";
 	private final String LOGIN_ERROR_PAGE = "/errorLoginPage.jsp";
@@ -77,9 +79,9 @@ public class Authentification extends HttpServlet {
 			
 			employee = employeeSearcher.getEmployee(enteredEmail);
 			
-		} catch (DAOException | SAXException e ) {
+		} catch (DAOException | SAXException | ClassNotFoundException e ) {
 			
-			session.setAttribute("cause", e.getMessage());
+			session.setAttribute(CAUSE, e.getMessage());
 			jump(DAO_ERROR_PAGE, req, resp);
 			return;
 		}

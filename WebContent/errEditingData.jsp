@@ -18,6 +18,6 @@
 			
 		</c:if>
 		<c:remove var = "badField" />
-		<a href="<c:url value='/defectEditPage.jsp'/>"> back </a>
+		<a href="<c:url value='${page}'/>"> back </a>
 	</body>
 </html>

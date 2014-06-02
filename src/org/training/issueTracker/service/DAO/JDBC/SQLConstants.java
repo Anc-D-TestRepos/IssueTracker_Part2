@@ -10,6 +10,11 @@ public class SQLConstants {
 	
 	public final static String  SLC_ALL_BUILD = "SELECT build FROM project ORDER BY name ASC";
 	public final static String  SLC_ALL_ISSUE = "SELECT * FROM issue";
+	public final static String   SLC_SORT_ISSUE = "SELECT * FROM (SELECT idIssue, priority, employee.email AS assignee,"
+													+ " type, status, summary FROM issue,employee"
+														+ " WHERE  issue.assignee = employee.idEmail ORDER BY idIssue "
+															+ "DESC FETCH NEXT ? ROWS ONLY) AS list ";
+	
 	public final static String  SLC_DEFECT_CAP = " SELECT * FROM (SELECT idIssue, priority, employee.email AS assignee,"
 													+ " type, status, summary FROM issue,employee"
 														+ " WHERE  issue.assignee = employee.idEmail ORDER BY idIssue "

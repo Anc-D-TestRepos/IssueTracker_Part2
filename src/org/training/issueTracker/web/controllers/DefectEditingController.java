@@ -11,11 +11,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.training.issueTracker.beans.Comment;
 import org.training.issueTracker.beans.Issue;
 import org.training.issueTracker.service.DAO.DAOInterfaces.DAOInterface;
 import org.training.issueTracker.service.DAO.JDBC.CheckerEditingIssueFields;
 import org.training.issueTracker.service.DAO.JDBC.DBImplDAO;
 import org.training.issueTracker.service.DAO.exceptions.DAOException;
+
 
 
 /**
@@ -27,6 +30,11 @@ public class DefectEditingController extends HttpServlet {
 	private final String CAUSE = "cause";
 	private final String ISSUE = "issue";
 	private final String EMAIL = "email";
+	private final String ACT_COMMENT = "activeComment";
+	private final String ACT_PROJECT = "activeProject";
+	private final String ACT_BUILD = "activeBuild";
+	private final String ACT_MAIL = "activeMail";
+	private final String RETURN_PAGE = "page"; 
 	private final String EMPTY_FIELDS = "not filled all necessary field  :";
 	private final String WRONG_FIELDS = "value fields \"Status\" and \"Assignee\" filled  incorrect";
 	private final String SCSSFUL_ADING_PAGE = "/scssfulAddingData.jsp";
@@ -65,7 +73,7 @@ public class DefectEditingController extends HttpServlet {
 		
 		String field = null;
 		String parameter = null;
-		boolean hasBadField = false;
+		Comment newComment = new Comment();
 		boolean hasCorrectlyField = false;
 		List <String> badFields = new ArrayList<String>();
 
@@ -73,7 +81,7 @@ public class DefectEditingController extends HttpServlet {
 		HttpSession session = req.getSession();
 		
 		
-		DAOInterface defectSetter = new DBImplDAO();
+		DAOInterface dataSetter = new DBImplDAO();
 	
 	
 		for (IssueField element : IssueField.values()) {
@@ -86,29 +94,38 @@ public class DefectEditingController extends HttpServlet {
 		}
 		
 		Issue  issuefromSession = (Issue)session.getAttribute(ISSUE);
-		
+		String activeComment = (String)req.getParameter("newComment"); 
+		String activeProject = (String)req.getParameter("project");
+		String activeBuild = (String)req.getParameter("build");
+		String activeMail = (String)req.getParameter("assignee");
+		System.out.println("catch commetn  "+activeComment);
 
-		
-		
+	
+
 		
 		try {
 						
 			badFields = CheckerEditingIssueFields.isFillingCorrectly(fields);
 			
 		} catch (DAOException e) {
-			session.setAttribute(CAUSE, e.getMessage());
+			req.setAttribute(CAUSE, e.getMessage());
 			jump(DAO_ERROR_PAGE,req,res);
 			return;
 		}
 		
-		hasBadField = !(badFields.isEmpty());
 		
-		if (hasBadField){
+		
+		if (!badFields.isEmpty()){
 
 			session.setAttribute(ISSUE, setChoisenIssueField(issuefromSession,req));
 	
 			session.setAttribute(BAD_FIELD, badFields);
 			session.setAttribute(CAUSE, EMPTY_FIELDS);
+			session.setAttribute(RETURN_PAGE, "/defectEditPage.jsp");
+			session.setAttribute(ACT_COMMENT,activeComment);
+			session.setAttribute(ACT_PROJECT,activeProject);
+			session.setAttribute(ACT_BUILD,activeBuild);
+			session.setAttribute(ACT_MAIL,activeMail);
 			jump(EDIT_ERROR_PAGE, req, res);
 			return;
 		}
@@ -117,7 +134,7 @@ public class DefectEditingController extends HttpServlet {
 		try {
 			hasCorrectlyField = CheckerEditingIssueFields.isCorrectlySatusAndAssignee(fields);
 		} catch (DAOException e) {
-			session.setAttribute(CAUSE, e.getMessage());
+			req.setAttribute(CAUSE, e.getMessage());
 			jump(DAO_ERROR_PAGE, req, res);
 			return;
 		}
@@ -129,9 +146,21 @@ public class DefectEditingController extends HttpServlet {
 			issuefromSession.setModifiedBy((String)session.getAttribute(EMAIL));
 		
 			try {
-				defectSetter.replaceIssue(setChoisenIssueField(issuefromSession,req));
-			} catch (DAOException e) {
-				session.setAttribute(CAUSE, e.getMessage());
+				
+
+				dataSetter.replaceIssue(setChoisenIssueField(issuefromSession,req));
+				
+				if(activeComment.trim().length()>0){
+										
+					newComment.setAddedBy((String)session.getAttribute(EMAIL));
+					newComment.setComment(activeComment);
+					newComment.setId(issuefromSession.getId());
+					
+					dataSetter.setComment(newComment);
+					}
+				
+			} catch (DAOException | ClassNotFoundException e) {
+				req.setAttribute(CAUSE, e.getMessage());
 				jump(DAO_ERROR_PAGE, req, res);
 				return;
 			}
@@ -141,10 +170,13 @@ public class DefectEditingController extends HttpServlet {
 						
 			
 			session.setAttribute(ISSUE, setChoisenIssueField(issuefromSession,req));
+			session.setAttribute(ACT_COMMENT,activeComment);
+			session.setAttribute(ACT_PROJECT,activeProject);
+			session.setAttribute(ACT_BUILD,activeBuild);
+			session.setAttribute(ACT_MAIL,activeMail);
+			session.setAttribute(RETURN_PAGE, "/defectEditPage.jsp");
 			
-			
-			
-			session.setAttribute(CAUSE, WRONG_FIELDS);
+			req.setAttribute(CAUSE, WRONG_FIELDS);
 			jump(EDIT_ERROR_PAGE, req, res);
 		}
 		 

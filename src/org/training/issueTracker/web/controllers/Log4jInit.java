@@ -1,4 +1,4 @@
-package org.training.issueTracker.web.controllers;
+/*package org.training.issueTracker.web.controllers;
 
 import java.io.IOException;
 import javax.servlet.ServletConfig;
@@ -11,9 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
-/**
+*//**
  * Servlet implementation class Log4jInit
- */
+ *//*
 @WebServlet(name = "Log4jInit",urlPatterns = {"/Log4jInit"}, 
 			initParams = {@WebInitParam(name = "logfile", value = "WEB-INF/log4j.xml")},
 				loadOnStartup=1)   
@@ -26,17 +26,17 @@ public class Log4jInit extends HttpServlet {
 	private final String FILE_NAME = "logfilename";
 	private final String INIT_PARAM = "logfile";
 	private final String SEPARATOR = "/";
-    /**
+    *//**
      * @see HttpServlet#HttpServlet()
-     */
+     *//*
     public Log4jInit() {
         super();
   
     }
  
-    /**
+    *//**
      * @see Servlet#init(ServletConfig)
-     */
+     *//*
     public void init() throws ServletException {
         super.init();
        
@@ -58,18 +58,19 @@ public class Log4jInit extends HttpServlet {
         
     }
  
-    /**
+    *//**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-     */
+     *//*
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // TODO Auto-generated method stub
     }
  
-    /**
+    *//**
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-     */
+     *//*
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // TODO Auto-generated method stub
     }
 }
 
+*/

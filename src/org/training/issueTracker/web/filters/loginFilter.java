@@ -18,7 +18,7 @@ import javax.servlet.annotation.WebFilter;
 public class loginFilter implements Filter {
 	private final String EMAIL = "email";
 	private final String PASS = "pass"; 
-	private final String ERR_PAGE = "/errorPage.jsp";
+	private final String ERR_PAGE = "/errorLoginPage.jsp";
     /**
      * Default constructor. 
      */

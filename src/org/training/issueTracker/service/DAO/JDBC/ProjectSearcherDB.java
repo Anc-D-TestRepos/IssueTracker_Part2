@@ -24,27 +24,27 @@ public class ProjectSearcherDB {
 	
 	
 	
-	public List<String> findAllProjectName() throws DAOException {
+	public List<String> findAllProjectName() throws DAOException, ClassNotFoundException {
 		List<String> projectNameList = new ArrayList<String>();
-		
+		ConnectionDB dBCon = null;
 		Connection con =null;
 		ResultSet rs=null;
 		Statement st=null;
 			
 			try {
-				con = ConnectionPool.getConnPool().getConnection();
-			
-			st = con.createStatement();
-			 rs = st.executeQuery(SQLConstants.SLC_ALL_PROJECT_NAME); 
+				dBCon = new ConnectionDB();
+				con = dBCon.getConnection();
+				st = con.createStatement();
+				rs = st.executeQuery(SQLConstants.SLC_ALL_PROJECT_NAME); 
 			  
-			 if (rs != null){
-					
-					while(rs.next()){
+				 if (rs != null){
 						
-						projectNameList.add(rs.getString(NAME)) ;
-										
+						while(rs.next()){
+							
+							projectNameList.add(rs.getString(NAME)) ;
+											
+						}
 					}
-				}
 			
 			} catch (SQLException e) {
 				throw new DAOException(CONNECT_ERR);
@@ -58,7 +58,7 @@ public class ProjectSearcherDB {
 						st.close();
 					}	
 					if (con!=null) {
-						ConnectionPool.getConnPool().releaseConnection(con);
+						con.close();
 					} 
 				}catch (SQLException e) {
 					logger.error(CLS_ERR + e.getMessage());

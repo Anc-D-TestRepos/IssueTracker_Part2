@@ -17,8 +17,8 @@
 		<div class="inputData"> 
 		
 			<form method="POST" action = "<c:url value='/Authentification'/>">
-				<div class="email"><input type="text" name="email"><span class="email"> email</span></div>
-				<div class="pass"><input type="password" name="pass"><span class="pass"> pass</span></div>
+				<div class="email"> <input type="text" name="email">  <span class="email"> email</span></div>
+				<div class="pass">  <input type="password" name="pass"><span class="pass"> pass</span></div>
 				<div class="button"><input type="submit" value="   enter   "></div>
 			</form>
 		</div>
@@ -28,12 +28,12 @@
 			<div class="defectList">
 				<table>
 					<tr>
-						<th><a  href="<c:url value='/IdIssueComparator'/>">Id</a></th>
+						<th><a  href="JavaScript:sendColumnName('Id')"       >Id</a></th>
 						<th><a  href="JavaScript:sendColumnName('Priority')" >Priority</a></th>
 						<th><a  href="JavaScript:sendColumnName('Assignee')" >Assignee</a></th>
-						<th><a  href="JavaScript:sendColumnName('Type')" >Type</a></th>
-						<th><a  href="JavaScript:sendColumnName('Status')" >Status</a></th>
-						<th><a  href="JavaScript:sendColumnName('Summary')" >Summary</a></th>
+						<th><a  href="JavaScript:sendColumnName('Type')"     >Type</a></th>
+						<th><a  href="JavaScript:sendColumnName('Status')"   >Status</a></th>
+						<th><a  href="JavaScript:sendColumnName('Summary')"  >Summary</a></th>
 					</tr>
 								
 					<c:forEach items = "${defectList}" var = "defect" varStatus = "status" >
@@ -52,7 +52,7 @@
 		<c:if test="${empty defectList}">	
 			<p align="center">Application doesn't have any defects </p>
 		</c:if>
-		 <form  name="columnName" method="POST"  action="<c:url value= '/StringFieldIssueSorter'/>" > 
+		 <form  name="columnName" method="POST"  action="<c:url value= 'IssueFieldSorter'/>" > 
 					<INPUT type=hidden name="sortColumn" value="">
 		</form>
 	</body>

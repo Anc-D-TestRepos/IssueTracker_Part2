@@ -1,10 +1,13 @@
+table td{
+	border: solid black 1px;
+}
 .inputData div {
 	margin:0 0 0 40%;
 	padding: 15px 0;
-	
+		
 }
 .inputData input, select {
-	
+
 	width: 250px;
 }
 .title {
@@ -23,4 +26,22 @@
 }
 .back {
 	text-align: center;
+}
+
+.addBy {
+	 
+	padding-right: 40px;
+}
+.commentTab {
+	margin: 0 auto  ; 
+
+}
+.commentHeader {
+	margin: 0 auto  ; 
+	width: 500px;
+}
+.commentBody {
+	 margin: 0 auto  ; 
+	width: 500px;
+	
 }

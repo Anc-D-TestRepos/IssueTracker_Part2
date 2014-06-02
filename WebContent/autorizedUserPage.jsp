@@ -21,7 +21,7 @@
 			
 		<div class="chngUserData">
 			<span class="chngData"><a href="<c:url value='/changeUserDataByUserPage.jsp'/>">change user data</a></span>
-			<span class="chngPass"><a href="<c:url value='/changeUserPassByUserPage.jsp'/>">change password</a></span>
+			<span class="chngPass"><a href="<c:url value='/changeUserPass.jsp'/>">change password</a></span>
 		</div>
 		<hr color="red">
 		<div class="button">
@@ -39,12 +39,12 @@
 			<div class="defectList">
 				<table>
 					<tr>
-						<th><a  href="<c:url value='/IdIssueComparator'/>">Id</a></th>
+						<th><a  href="JavaScript:sendColumnName('Id')"       >Id</a></th>
 						<th><a  href="JavaScript:sendColumnName('Priority')" >Priority</a></th>
 						<th><a  href="JavaScript:sendColumnName('Assignee')" >Assignee</a></th>
-						<th><a  href="JavaScript:sendColumnName('Type')" >Type</a></th>
-						<th><a  href="JavaScript:sendColumnName('Status')" >Status</a></th>
-						<th><a  href="JavaScript:sendColumnName('Summary')" >Summary</a></th>
+						<th><a  href="JavaScript:sendColumnName('Type')"     >Type</a></th>
+						<th><a  href="JavaScript:sendColumnName('Status')"   >Status</a></th>
+						<th><a  href="JavaScript:sendColumnName('Summary')"  >Summary</a></th>
 					</tr>
 								
 					<c:forEach items = "${defectList}" var = "defect" varStatus = "status" >

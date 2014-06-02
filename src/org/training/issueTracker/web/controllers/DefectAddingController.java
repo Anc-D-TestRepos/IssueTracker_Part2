@@ -143,7 +143,7 @@ public class DefectAddingController extends HttpServlet {
 
 			try {
 				defectSetter.setIssue(issue);
-			} catch (DAOException e) {
+			} catch (DAOException | ClassNotFoundException e) {
 				session.setAttribute(CAUSE, e.getMessage());
 				jump(DAO_ERROR_PAGE, req, resp);
 				return;

@@ -1,7 +1,7 @@
 package org.training.issueTracker.web.controllers;
 
-
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -14,85 +14,78 @@ import javax.servlet.http.HttpSession;
 
 import org.training.issueTracker.beans.Issue;
 import org.training.issueTracker.service.DAO.DAOInterfaces.DAOInterface;
-import org.training.issueTracker.service.DAO.JDBC.ConnectionDB;
 import org.training.issueTracker.service.DAO.JDBC.DBImplDAO;
 import org.training.issueTracker.service.DAO.exceptions.DAOException;
-import org.xml.sax.SAXException;
-
 
 /**
- * Servlet implementation class StartPage
+ * Servlet implementation class PrepareForEditUserDataByAdminController
  */
-@WebServlet("/StartPage")
-public class StartPage extends HttpServlet {
-	private final String  DEFECT_LIST = "defectList";
-	private final String  START_PAGE = "/startPage.jsp";
-	private final String  ROLE = "role";
-	private final String  GUEST = "guest";
+@WebServlet("/PrepareForEditUserDataByAdminController")
+public class PrepareForEditUserDataByAdminController extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private final String MAIL_LIST ="mailList";
 	private final String CAUSE = "cause";
+	private final String USER_EDIT_PAGE = "/changeUserDataByAdminPage.jsp";
 	private final String DAO_ERROR_PAGE = "/DAOErrPage.jsp";	
-
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public StartPage() {
+    public PrepareForEditUserDataByAdminController() {
         super();
-       
+        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		performTask(request,response);
+		performTask(request, response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		performTask(request,response);
+		performTask(request, response);
 	}
 
+	
 	protected void performTask(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		
-		int capacity = 10;
-		String  role = GUEST;
-		HttpSession session = req.getSession();
-		
-	
+		System.out.println("Hello from PrepareForEditUserDataByAdminController");
 
-		DAOInterface defectSearcher = new DBImplDAO();
+		HttpSession session = req.getSession();
+				
+		DAOInterface emailSearcher = new DBImplDAO();
+		
 		try {
 			
-			
-			List<Issue> defectList = defectSearcher.getListIssues(capacity);
-			
-			
-			session.setAttribute(ROLE, role);
-			session.setAttribute(DEFECT_LIST, defectList);
-	
-			
-			jump(START_PAGE, req, res);
+							
 		
-		} catch (DAOException | SAXException | ClassNotFoundException e) {
+			List<String>  emploeesMailList = emailSearcher.getAllEmployeesMail();
+				
 			
+			session.setAttribute(MAIL_LIST, emploeesMailList);
+			
+						
+		} catch (DAOException | ClassNotFoundException e) {
 			session.setAttribute(CAUSE, e.getMessage());
 			jump(DAO_ERROR_PAGE,req,res);
 			return;
-		} 
+		}
+			jump(USER_EDIT_PAGE,req,res);
+		
+	
+		
 	}
 		
-	protected void jump( String url, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+	private void jump( String url, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
 			
 			RequestDispatcher rd = getServletContext().getRequestDispatcher(url);
 			
 			rd.forward(req, resp);
 			
 		}
-				
 
 }
-
-

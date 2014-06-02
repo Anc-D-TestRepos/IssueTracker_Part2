@@ -78,7 +78,7 @@ public class PrepareDataForAddIssueController extends HttpServlet {
 			session.setAttribute(MAIL_LIST, emploeesMailList);
 			session.setAttribute(PROJECT_NAME, projectNameList);
 		
-		} catch (DAOException e) {
+		} catch (DAOException | ClassNotFoundException e) {
 			session.setAttribute(CAUSE, e.getMessage());
 			jump(DAO_ERROR_PAGE,req,res);
 			return;

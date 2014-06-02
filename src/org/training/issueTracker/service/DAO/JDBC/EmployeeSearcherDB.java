@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.training.issueTracker.beans.Employee;
 import org.training.issueTracker.service.DAO.exceptions.DAOException;
@@ -25,18 +26,19 @@ public class EmployeeSearcherDB {
 	private Logger logger= Logger.getLogger(EmployeeSearcherDB.class);
 
 
-	public List<String> findAllEmployeesMail() throws DAOException {
+	public List<String> findAllEmployeesMail() throws DAOException, ClassNotFoundException {
 		List<String> employeesMailList = new ArrayList<String>();
 		String email;
+		ConnectionDB dBCon = null;
 		Connection con =null;
 		ResultSet rs=null;
 		Statement st=null;
 			
 			try {
-				con = ConnectionPool.getConnPool().getConnection();
-			
-			st = con.createStatement();
-			 rs = st.executeQuery(SQLConstants.SLC_ALL_EMAIL); 
+				dBCon = new ConnectionDB();
+				con = dBCon.getConnection();
+				st = con.createStatement();
+				rs = st.executeQuery(SQLConstants.SLC_ALL_EMAIL); 
 			  
 			 if (rs != null){
 					
@@ -61,7 +63,7 @@ public class EmployeeSearcherDB {
 						st.close();
 					}	
 					if (con!=null) {
-						ConnectionPool.getConnPool().releaseConnection(con);
+						con.close();
 					} 
 				}catch (SQLException e) {
 					logger.error(CLS_ERR + e.getMessage());
@@ -71,15 +73,16 @@ public class EmployeeSearcherDB {
 		return employeesMailList;
 	}
 	
-	public Employee findEmployee(String email) throws DAOException {
+	public Employee findEmployee(String email) throws DAOException, ClassNotFoundException {
+		ConnectionDB dBCon = null;
 		Employee employee = null; 
 		Connection con =null;
 		ResultSet rs=null;
 		PreparedStatement ps=null;
 	
 		try {
-			con = ConnectionPool.getConnPool().getConnection();
-		
+			dBCon = new ConnectionDB();
+			con = dBCon.getConnection();
 			 ps = con.prepareStatement(SQLConstants.SLC_EMPL_BY_EMAIL); 
 			  ps.setString(1, email);
 			  rs = ps.executeQuery();
@@ -112,7 +115,7 @@ public class EmployeeSearcherDB {
 					ps.close();
 				}	
 				if (con!=null) {
-					ConnectionPool.getConnPool().releaseConnection(con);
+					con.close();
 				} 
 			}catch (SQLException e) {
 				logger.error(CLS_ERR + e.getMessage());

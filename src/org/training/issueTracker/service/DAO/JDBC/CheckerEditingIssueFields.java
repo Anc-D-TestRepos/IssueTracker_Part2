@@ -40,7 +40,7 @@ public class CheckerEditingIssueFields {
 			field = checkingFields.get(i);
 		
 	
-			if ((field == null) ||(field.isEmpty())){
+			if ((field == null) ||(field.trim().isEmpty())){
 				
 				badFields.add(getFieldName(i));
 			

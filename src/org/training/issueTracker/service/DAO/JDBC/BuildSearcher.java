@@ -24,16 +24,17 @@ public class BuildSearcher {
 
 	}
 	
-	public List<String> findAllBuild() throws DAOException {
+	public List<String> findAllBuild() throws DAOException, ClassNotFoundException {
 		List<String> buildVersionList = new ArrayList<String>();
 		
+		ConnectionDB dBCon = null;
 		Connection con =null;
 		ResultSet rs=null;
 		Statement st=null;
 			
 			try {
-				con = ConnectionPool.getConnPool().getConnection();
-			
+				dBCon = new ConnectionDB();
+				con = dBCon.getConnection();
 				st = con.createStatement();
 				rs = st.executeQuery(SQLConstants.SLC_ALL_BUILD); 
 			  
@@ -60,7 +61,7 @@ public class BuildSearcher {
 						st.close();
 					}	
 					if (con!=null) {
-						ConnectionPool.getConnPool().releaseConnection(con);
+						con.close();
 					} 
 				}catch (SQLException e) {
 					logger.error(CLS_ERR + e.getMessage());

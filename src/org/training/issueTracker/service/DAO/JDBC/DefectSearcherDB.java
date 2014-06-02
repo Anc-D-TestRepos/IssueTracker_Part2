@@ -1,5 +1,6 @@
 package org.training.issueTracker.service.DAO.JDBC;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,9 +8,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
 import org.training.issueTracker.beans.Issue;
 import org.training.issueTracker.service.DAO.exceptions.DAOException;
+
 
 public class DefectSearcherDB {
 	
@@ -31,21 +35,27 @@ public class DefectSearcherDB {
 	private final String CLS_ERR = " Can't close - ";
 	private Logger logger= Logger.getLogger(DefectSearcherDB.class);
 	
+	private enum IssueColumnName {
+		ID,PRIORITY,ASSIGNEE,TYPE,STATUS,SUMMARY;
+		
+	 }
 	
 	
 	public DefectSearcherDB() {
 		super();
-		
+
 	}
 	
-	public List<Issue> findDefects() throws DAOException {
+	public List<Issue> findDefects() throws DAOException, ClassNotFoundException {
+		ConnectionDB dBCon = null;
 		Connection con = null;
 		ResultSet rs=null;
 		Statement st=null;
 		List<Issue> defects = new ArrayList<Issue>();
 	
 		try {
-			con = ConnectionPool.getConnPool().getConnection();
+			dBCon = new ConnectionDB();
+			con = dBCon.getConnection();
 					
 			st = con.createStatement();
 			rs= st.executeQuery(SQLConstants.SLC_ALL_ISSUE);
@@ -65,15 +75,16 @@ public class DefectSearcherDB {
 	
 	}	
 			
-	public List<Issue> findDefects(int capacity) throws DAOException {
+	public List<Issue> findDefects(int capacity) throws DAOException, ClassNotFoundException {
+		ConnectionDB dBCon = null;
 		Connection con = null;
 		ResultSet rs = null;
 		PreparedStatement ps = null;
 		List<Issue> defects = new ArrayList<Issue>();
 		
 		try {
-
-			con = ConnectionPool.getConnPool().getConnection();
+			dBCon = new ConnectionDB();
+			con = dBCon.getConnection();
 			
 			  ps = con.prepareStatement(SQLConstants.SLC_DEFECT_CAP); 
 			  ps.setInt(1, capacity);
@@ -82,6 +93,7 @@ public class DefectSearcherDB {
 			  defects=getDefectList(rs);
 			
 		}catch (SQLException e) {
+			
 			throw new DAOException(CONNECT_ERR);
 		}
 		finally{
@@ -94,15 +106,19 @@ public class DefectSearcherDB {
 		
 			
 	}
-	public Issue findDefectById(int id) throws DAOException{
-		
+	public Issue findDefectById(int id) throws DAOException, ClassNotFoundException{
+		ConnectionDB dBCon = null;
 		Connection con =null;
 		PreparedStatement ps=null;
 		ResultSet rs= null;
 		Issue issue =null;
-		con = ConnectionPool.getConnPool().getConnection();
+		
 		
 		 try {
+			 
+			dBCon = new ConnectionDB();
+			con = dBCon.getConnection();
+			 
 			ps = con.prepareStatement(SQLConstants.SLC_DEFECT_BY_ID);
 				
 		
@@ -147,19 +163,20 @@ public class DefectSearcherDB {
 	
 	
 	
-	public List<Issue> findDefectsByUser(String email) throws DAOException {
-		
+	public List<Issue> findDefectsByUser(String email) throws DAOException, ClassNotFoundException {
+		ConnectionDB dBCon = null;
 		Connection con = null;
 		ResultSet rs=null;
 		PreparedStatement ps = null;
 		List<Issue> defects = new ArrayList<Issue>();
 	
 		try {
-			con = ConnectionPool.getConnPool().getConnection();
-			  ps = con.prepareStatement(SQLConstants.SLC_DEFECT_BY_USER); 
-			  
-			  ps.setString(1, email);
-			  rs = ps.executeQuery();
+			dBCon = new ConnectionDB();
+			con = dBCon.getConnection();
+			ps = con.prepareStatement(SQLConstants.SLC_DEFECT_BY_USER); 
+			 
+			ps.setString(1, email);
+			rs = ps.executeQuery();
              
 			defects = getDefectList(rs);
 		
@@ -175,16 +192,16 @@ public class DefectSearcherDB {
 		return defects;
 	}
 	
-	public List<Issue> findDefectsByUser(String email, int capacity) throws DAOException {
-		
+	public List<Issue> findDefectsByUser(String email, int capacity) throws DAOException, ClassNotFoundException {
+		ConnectionDB dBCon = null;
 		Connection con = null;
 		ResultSet rs=null;
 		PreparedStatement ps = null;
 		List<Issue> defects = new ArrayList<Issue>();
 	
 		try {
-			con = ConnectionPool.getConnPool().getConnection();
-					
+			 dBCon = new ConnectionDB();
+			 con = dBCon.getConnection();
 			 ps = con.prepareStatement(SQLConstants.SLC_DEFECT_BY_USER_CAP); 
 			 ps.setString(1, email); 
 			 ps.setInt(2, capacity);
@@ -202,8 +219,68 @@ public class DefectSearcherDB {
 		}
 		
 		return defects;
-		}
+	}
 	
+	
+	
+	
+	
+	public List<Issue> findDefectsSortedByKey(String key, int capacity) throws DAOException, ClassNotFoundException {
+		
+		ConnectionDB dBCon = null;
+		Connection con = null;
+		ResultSet rs=null;
+		PreparedStatement ps = null;
+		List<Issue> defects = new ArrayList<Issue>();
+	
+		try {
+			dBCon = new ConnectionDB();
+			con = dBCon.getConnection();
+			
+					
+			
+			ps = con.prepareStatement(SQLConstants.SLC_SORT_ISSUE + getSQLKey(key));
+			ps.setInt(1, capacity);
+			rs = ps.executeQuery();
+	
+			defects = getDefectList(rs);
+		}  catch (SQLException e) {
+			throw new DAOException(CONNECT_ERR);
+			
+		}
+		finally{
+			closeResultset(rs);
+			closeStatement(ps);
+			closeConnection (con);
+		}
+		
+		return defects;
+	
+	}	
+	
+	
+	 private String getSQLKey(String key) {
+		
+		switch (IssueColumnName.valueOf(key.toUpperCase())) {
+		
+		case ID:
+			return "ORDER BY idIssue ASC";
+		case PRIORITY:
+			return "ORDER BY priority ASC";
+		case ASSIGNEE:
+			return "ORDER BY assignee ASC";
+		case TYPE:
+			return "ORDER BY type ASC";	
+		case STATUS:
+			return "ORDER BY status ASC";
+		case SUMMARY:
+			return "ORDER BY summary ASC";
+			
+		default:
+			return "ORDER BY idIssue ASC";
+		
+	}
+		 }
 	private List<Issue> getDefectList (ResultSet rs) throws DAOException {
 		List<Issue> defects = new ArrayList<Issue>();
 		
@@ -233,6 +310,7 @@ public class DefectSearcherDB {
 		if (rs!=null){
 			try {
 				rs.close();
+				
 			} catch (SQLException e) {
 				logger.error(CLS_ERR + e.getMessage());
 			}
@@ -259,9 +337,16 @@ public class DefectSearcherDB {
 		}
 	}
 	private void closeConnection (Connection con) throws DAOException{
-		if (con!=null){
-			ConnectionPool.getConnPool().releaseConnection(con);
-			
+		
+		
+		try {
+			if (con!=null){
+				
+				con.close();
+				throw new SQLException();
+				}
+		}catch (SQLException e) {
+			logger.error(CLS_ERR + e.getMessage());
 		}
 	}
 	

@@ -2,10 +2,12 @@ package org.training.issueTracker.service.DAO.XML;
 
 import java.util.List;
 
+import org.training.issueTracker.beans.Comment;
 import org.training.issueTracker.beans.Issue;
 import org.training.issueTracker.beans.Employee;
 import org.training.issueTracker.beans.Project;
 import org.training.issueTracker.service.DAO.DAOInterfaces.DAOInterface;
+import org.training.issueTracker.service.DAO.exceptions.DAOException;
 import org.xml.sax.SAXException;
 
 
@@ -92,6 +94,37 @@ public class XMLImplDAO implements DAOInterface {
 	@Override
 	public void replaceIssue(Issue issue) {
 		throw new UnsupportedOperationException("this operation is not supported ");
+	}
+
+	@Override
+	public List<Issue> getSortedListIssue(String key, int capacity) throws DAOException {
+		throw new UnsupportedOperationException("this operation is not supported ");
+	}
+
+	@Override
+	public void replaceUserPassword(String user, String pass)throws DAOException{
+		throw new UnsupportedOperationException("this operation is not supported ");
+		
+	}
+
+	@Override
+	public void replaceUserDataByAdmin(Employee user) throws DAOException {
+		throw new UnsupportedOperationException("this operation is not supported ");
+	}
+	@Override
+	public void replaceUserDataByUser(Employee user, String email) throws DAOException {
+		throw new UnsupportedOperationException("this operation is not supported ");
+	}
+
+	@Override
+	public List<Comment> getCommentsSortByDate(int issueId) {
+		throw new UnsupportedOperationException("this operation is not supported ");
+	}
+
+	@Override
+	public void setComment(Comment comment) {
+		throw new UnsupportedOperationException("this operation is not supported ");
+		
 	}
 
 	

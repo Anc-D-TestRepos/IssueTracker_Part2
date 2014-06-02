@@ -14,18 +14,17 @@ import org.apache.log4j.Logger;
 import org.training.issueTracker.beans.Employee;
 import org.training.issueTracker.service.DAO.DAOInterfaces.DAOInterface;
 import org.training.issueTracker.service.DAO.JDBC.DBImplDAO;
+import org.training.issueTracker.service.DAO.exceptions.DAOException;
 
 /**
  * Servlet implementation class ChangeUserDataByUser
  */
 @WebServlet("/ChangeUserDataByUser")
 public class ChangeUserDataByUser extends HttpServlet {
-	private final String  DEFECT_LIST = "defectList";
-	private final String EMPLOYEE = "employee";
-	private final String  IO_ERR = "I\\O error in AuthorizedAdmin - ";
-	private final String ADMIN_PAGE ="/autorizedAdminPage.jsp";
-	private final String LOG_ATRR = "log4";
-	private Logger logger ;
+	private final String USER ="user";
+	private final String CAUSE = "cause";
+	private final String SCSFL_PAGE = "/scssfulAddingData.jsp";
+	private final String DAO_ERROR_PAGE = "/DAOErrPage.jsp";	
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -50,32 +49,46 @@ public class ChangeUserDataByUser extends HttpServlet {
 	}
 
 	protected void performTask(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		System.out.println("Hello from  ChangeUserDataByUSER///////////////////////////////////////////////////////");
-
-		HttpSession session = req.getSession();
-		logger = (Logger)getServletContext().getAttribute(LOG_ATRR);
+HttpSession session = req.getSession();
+				
 		
-		DAOInterface defectSearcher = new DBImplDAO();
-		//boolean hasDefect = (boolean)session.getAttribute(HAS_DEFECT);
-		//Employee employee = (Employee) session.getAttribute(EMPLOYEE);
-		//System.out.println(employee);
+		String firstName = null;
+		String lastName = null;
+		String newEmail = null;
+		String currentEmail = null;
+		Employee user = null;
+		DAOInterface dataSetter = new DBImplDAO();
+		
+		try {
 			
-		String fName= req.getParameter("firstName");
-		System.out.println(fName);
-		
-		String lName= req.getParameter("lastName");
-		System.out.println(lName);
-		
-		String email= req.getParameter("email");
-		System.out.println(email);
-		
-		//session.setAttribute(EMPLOYEE, employee);
-	
-		if(true){
-			jump("/scssfulAddingDataByUser.jsp",req,res);
-		}else {
-			jumpError("/errAddingDataByUser.jsp","not all field filled",req,res);
+			
+			currentEmail = (String)session.getAttribute("email");
+			firstName = (String)req.getParameter("first_name");		
+			lastName = (String)req.getParameter("last_name");		
+				
+			newEmail = (String)req.getParameter("email");		
+			System.out.println(firstName);
+			System.out.println(lastName);
+			System.out.println("current -> "+currentEmail);
+			System.out.println("new -> "+newEmail);
+			user = new Employee();
+			
+			user.setFirstName(firstName);
+			user.setLastName(lastName);
+			user.setEmail(newEmail);
+			System.out.println(user.toString());
+				
+			dataSetter.replaceUserDataByUser(user, currentEmail);
+			
+			
+						
+		} catch (DAOException | ClassNotFoundException e) {
+			req.setAttribute(CAUSE, "problem with connection to database");
+			jump(DAO_ERROR_PAGE,req,res);
+			return;
 		}
+			jump(SCSFL_PAGE,req,res);
+		
 	
 		
 	}
@@ -87,11 +100,4 @@ public class ChangeUserDataByUser extends HttpServlet {
 			rd.forward(req, resp);
 			
 		}
-	private void jumpError( String url, String cause, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
-		
-		RequestDispatcher rd = getServletContext().getRequestDispatcher(url);
-		
-		rd.forward(req, resp);
-		
-	}
 }

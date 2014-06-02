@@ -163,11 +163,13 @@
 						<c:if test="${name != issue.project}"><option value="${name}">${name}</option></c:if>
 						
 						</c:forEach>
+						<c:if test="${empty projectName}"><option value="${activeProject}" selected>${activeProject}</option></c:if>
 					</select>
 					<span class="projectDescr"> Project </span>
 				</div>
 				
 				<c:remove var = "activeProject" />
+				<c:remove var = "projectName" />
 				
 				<div class="buildFound">
 					<select name="build">
@@ -178,11 +180,13 @@
 					
 						
 						</c:forEach>
+						<c:if test="${empty buildList}"><option value="${activeBuild}" selected>${activeBuild}</option></c:if>
 					</select>
 					<span class="buildDescr"> Build found </span>
 				</div> 
 				
 				<c:remove var = "activeBuild" />
+				<c:remove var = "buildList" />
 				
 				<div class="assignee">
 					<select name="assignee">
@@ -192,15 +196,46 @@
 						<c:if test="${assignee != issue.assignee}"><option value="${assignee}">${assignee}</option></c:if>
 											
 					</c:forEach>
+					<c:if test="${empty mailList}"><option value="${activeMail}" selected>${activeMail}</option></c:if>
 					</select>
 					<span class="assigneeDescr"> Assignee</span>
 				</div> 
 				
-				<c:remove var = "activeAssignee" />
+				<c:remove var = "mailList" />
+					<c:remove var = "activeMail" />
+				
+				
+				<div class="comment">
+					<span class="commentInput">
+						<textarea name="newComment" cols="29" rows="5">${activeComment}</textarea>
+						</span>
+					<span class="newCommentDescr">Add Comment 
+					</span>
+					<c:remove var = "activeComment" />
+				</div>
 				
 				<div class="button"><input type="submit" value="   Update   "></div>
+				
+				
 			</form>
 		</div>
+		
+		<c:if test="${not empty commentList}">
+			<div class="comment">
+			<table class="commentTab">
+			
+				<c:forEach items = "${commentList}" var = "comment" varStatus = "status" >		
+					<tr>	<td><div class="commentHeader"><span class="addBy">Added By:${comment.addedBy}</span> <span class="addDate" >Add Date:${comment.addDate}</span> </div>
+							<div class="commentBody">${comment.comment} </div></td>
+					</tr>
+					
+					</c:forEach>
+			
+			</table>		
+			</div>
+		</c:if>
 		<div class="back"><a  href="<c:url value='/DispatcherController'/>">back</a></div>
+		
+		
 	</body>
 </html>

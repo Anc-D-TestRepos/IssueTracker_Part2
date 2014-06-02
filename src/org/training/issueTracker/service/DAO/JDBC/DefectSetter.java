@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import org.apache.log4j.Logger;
 import org.training.issueTracker.beans.Issue;
 import org.training.issueTracker.service.DAO.exceptions.DAOException;
@@ -13,7 +14,7 @@ public class DefectSetter {
 	private  final String ID_EMAIL = "idEmail";
 	private  final String CLS_ERR = " Can't close - ";
 	private  final String CONNECT_ERR  = " Can't write issue problem with  connection  to database  ";
-	private Logger logger= Logger.getLogger(ProjectSearcherDB.class);
+	private Logger logger= Logger.getLogger(DefectSetter.class);
 	
 	
 	public DefectSetter() {
@@ -22,9 +23,10 @@ public class DefectSetter {
 	}
 	
 	
-public void editIssue(Issue issue) throws DAOException {
+public void editIssue(Issue issue) throws DAOException, ClassNotFoundException {
 		
 		Object lock = new Object();
+		ConnectionDB dBCon = null;
 		Connection con =null;
 		PreparedStatement ps=null;
 			
@@ -32,7 +34,8 @@ public void editIssue(Issue issue) throws DAOException {
 				
 				int employeeId =  getEmployeeId(issue.getAssignee());			
 				int projectId = getProjectId(issue.getProject());
-				con = ConnectionPool.getConnPool().getConnection();
+				dBCon = new ConnectionDB();
+				con = dBCon.getConnection();
 				
 				synchronized (lock) {
 					
@@ -64,7 +67,7 @@ public void editIssue(Issue issue) throws DAOException {
 						ps.close();
 					}	
 					if (con!=null) {
-						ConnectionPool.getConnPool().releaseConnection(con);
+						con.close();
 					} 
 				}catch (SQLException e) {
 					logger.error(CLS_ERR + e.getMessage());
@@ -76,16 +79,18 @@ public void editIssue(Issue issue) throws DAOException {
 
 	
 	
-	public void addIssue(Issue issue) throws DAOException {
+	public void addIssue(Issue issue) throws DAOException, ClassNotFoundException {
 		
 		Object lock = new Object();
+		ConnectionDB dBCon = null;
 		Connection con =null;
 		PreparedStatement ps=null;
 			
 			try {
 				Integer employeeId =  getEmployeeId(issue.getAssignee());			
 				int projectId = getProjectId(issue.getProject());
-				con = ConnectionPool.getConnPool().getConnection();
+				dBCon = new ConnectionDB();
+				con = dBCon.getConnection();
 				
 				synchronized (lock) {
 					
@@ -133,7 +138,7 @@ public void editIssue(Issue issue) throws DAOException {
 						ps.close();
 					}	
 					if (con!=null) {
-						ConnectionPool.getConnPool().releaseConnection(con);
+						con.close();
 					} 
 				}catch (SQLException e) {
 					logger.error(CLS_ERR + e.getMessage());
@@ -145,19 +150,19 @@ public void editIssue(Issue issue) throws DAOException {
 
 
 
-	private Integer getEmployeeId(String assignee) throws DAOException {
-		
-			Connection con =null;
-			ResultSet rs=null;
-			PreparedStatement ps=null;
+	private Integer getEmployeeId(String assignee) throws DAOException, ClassNotFoundException {
+			ConnectionDB dBCon = null;
+			Connection con = null;
+			ResultSet rs = null;
+			PreparedStatement ps = null;
 			String result= "" ;
 		
 			try {
-				con = ConnectionPool.getConnPool().getConnection();
-				
-				 ps = con.prepareStatement(SQLConstants.SLC_ID_BY_EMAIL); 
-				  ps.setString(1, assignee);
-				  rs = ps.executeQuery();
+				dBCon = new ConnectionDB();
+				con = dBCon.getConnection();
+				ps = con.prepareStatement(SQLConstants.SLC_ID_BY_EMAIL); 
+				ps.setString(1, assignee);
+				rs = ps.executeQuery();
 			
 				
 				if (rs != null){
@@ -183,7 +188,7 @@ public void editIssue(Issue issue) throws DAOException {
 						ps.close();
 					}	
 					if (con!=null) {
-						ConnectionPool.getConnPool().releaseConnection(con);
+						con.close();
 					} 
 				}catch (SQLException e) {
 					logger.error(CLS_ERR + e.getMessage());
@@ -200,18 +205,19 @@ public void editIssue(Issue issue) throws DAOException {
 
 
 
-	private int getProjectId(String projectName) throws DAOException {
+	private int getProjectId(String projectName) throws DAOException, ClassNotFoundException {
+		ConnectionDB dBCon = null;
 		Connection con =null;
 		ResultSet rs=null;
 		PreparedStatement ps=null;
 		String result ="";
 	
 		try {
-			con = ConnectionPool.getConnPool().getConnection();
-		
-			 ps = con.prepareStatement(SQLConstants.SLC_ID_BY_PROJECT_NAME); 
-			  ps.setString(1, projectName);
-			  rs = ps.executeQuery();
+			dBCon = new ConnectionDB();
+			con = dBCon.getConnection();
+			ps = con.prepareStatement(SQLConstants.SLC_ID_BY_PROJECT_NAME); 
+			ps.setString(1, projectName);
+			rs = ps.executeQuery();
 		
 			
 			if (rs != null){
@@ -239,7 +245,7 @@ public void editIssue(Issue issue) throws DAOException {
 					ps.close();
 				}	
 				if (con!=null) {
-					ConnectionPool.getConnPool().releaseConnection(con);
+					con.close();
 				} 
 			}catch (SQLException e) {
 				logger.error(CLS_ERR + e.getMessage());

@@ -2,6 +2,8 @@ package org.training.issueTracker.service.DAO.JDBC;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.training.issueTracker.beans.Comment;
 import org.training.issueTracker.beans.Issue;
 import org.training.issueTracker.beans.Employee;
 import org.training.issueTracker.service.DAO.DAOInterfaces.DAOInterface;
@@ -17,7 +19,7 @@ public class DBImplDAO implements DAOInterface {
 	}
 	
 	@Override
-	public List<Issue> getListIssues() throws DAOException {
+	public List<Issue> getListIssues() throws DAOException, ClassNotFoundException {
 		DefectSearcherDB defectSearcher = new DefectSearcherDB();
 		
 		List<Issue> defectList = new ArrayList<Issue>();
@@ -27,7 +29,7 @@ public class DBImplDAO implements DAOInterface {
 	}
 	
 	@Override
-	public List<Issue> getListIssues(int capacity) throws DAOException {
+	public List<Issue> getListIssues(int capacity) throws DAOException, ClassNotFoundException {
 	
 		DefectSearcherDB defectSearcher = new DefectSearcherDB();
 		List<Issue> defectList = new ArrayList<Issue>();
@@ -37,7 +39,7 @@ public class DBImplDAO implements DAOInterface {
 	
 	}
 	@Override
-	public Employee getEmployee(String email) throws DAOException{
+	public Employee getEmployee(String email) throws DAOException, ClassNotFoundException{
 		EmployeeSearcherDB employeeSearcher = new EmployeeSearcherDB();
 		Employee employee  = null;
 				
@@ -49,7 +51,7 @@ public class DBImplDAO implements DAOInterface {
 	}
 
 	@Override
-	public List<Issue> getListIssuesbyUser(String email) throws DAOException {
+	public List<Issue> getListIssuesbyUser(String email) throws DAOException, ClassNotFoundException {
 		DefectSearcherDB defectSearcher = new DefectSearcherDB();
 		List<Issue> defectList = new ArrayList<Issue>();
 		defectList = defectSearcher.findDefectsByUser( email );
@@ -57,7 +59,7 @@ public class DBImplDAO implements DAOInterface {
 	}
 	
 	@Override
-	public List<Issue> getListIssuesbyUser(String email, int capacity) throws DAOException {
+	public List<Issue> getListIssuesbyUser(String email, int capacity) throws DAOException, ClassNotFoundException {
 		
 		DefectSearcherDB defectSearcher = new DefectSearcherDB();
 		List<Issue> defectList = new ArrayList<Issue>();
@@ -67,21 +69,21 @@ public class DBImplDAO implements DAOInterface {
 
 
 	@Override
-	public List<String> getAllEmployeesMail() throws DAOException {
+	public List<String> getAllEmployeesMail() throws DAOException, ClassNotFoundException {
 		EmployeeSearcherDB employeeSearcher = new EmployeeSearcherDB();
 		return employeeSearcher.findAllEmployeesMail();
 	}
 
 
 	@Override
-	public List<String> getAllProjectName() throws DAOException {
+	public List<String> getAllProjectName() throws DAOException, ClassNotFoundException {
 		ProjectSearcherDB projectSearcher = new ProjectSearcherDB();
 		return projectSearcher.findAllProjectName();
 	}
 
 
 	@Override
-	public List<String> getAllBuildVersion() throws DAOException  {
+	public List<String> getAllBuildVersion() throws DAOException, ClassNotFoundException  {
 		BuildSearcher buildSearcher = new BuildSearcher();
 		
 		return buildSearcher.findAllBuild();
@@ -89,7 +91,7 @@ public class DBImplDAO implements DAOInterface {
 
 
 	@Override
-	public void setIssue(Issue issue) throws DAOException {
+	public void setIssue(Issue issue) throws DAOException, ClassNotFoundException {
 		DefectSetter defectSetter = new DefectSetter();
 		defectSetter.addIssue(issue);
 		
@@ -97,7 +99,7 @@ public class DBImplDAO implements DAOInterface {
 
 
 	@Override
-	public Issue getIssueById(int id) throws DAOException {
+	public Issue getIssueById(int id) throws DAOException, ClassNotFoundException {
 		DefectSearcherDB defectSearcher = new DefectSearcherDB();
 		
 		return defectSearcher.findDefectById( id );
@@ -106,9 +108,53 @@ public class DBImplDAO implements DAOInterface {
 
 
 	@Override
-	public void replaceIssue(Issue issue) throws DAOException {
+	public void replaceIssue(Issue issue) throws DAOException, ClassNotFoundException {
 		DefectSetter defectSetter = new DefectSetter();
 		defectSetter.editIssue(issue);
+	}
+
+	@Override
+	public List<Issue> getSortedListIssue(String key, int capacity) throws DAOException, ClassNotFoundException {
+
+		DefectSearcherDB defectSearcher = new DefectSearcherDB();
+			
+		return defectSearcher.findDefectsSortedByKey( key, capacity );
+	}
+
+	@Override
+	public void replaceUserPassword(String user, String pass)throws DAOException, ClassNotFoundException{
+			UserDataSetter setter = new UserDataSetter();
+			
+			setter.editPassword(user, pass);
+		
+	}
+
+	@Override
+	public void replaceUserDataByAdmin(Employee user) throws DAOException, ClassNotFoundException {
+		UserDataSetter setter = new UserDataSetter();
+		
+		setter.editUserDataByAdmin(user);
+		
+	}
+	@Override
+	public void replaceUserDataByUser(Employee user, String email) throws DAOException, ClassNotFoundException {
+		UserDataSetter setter = new UserDataSetter();
+		
+		setter.editUserDataByUser(user, email);
+		
+	}
+
+	@Override
+	public List<Comment> getCommentsSortByDate(int issueId) throws ClassNotFoundException, DAOException {
+		CommentGetter getter = new CommentGetter();
+		return getter.findCommentsById(issueId);
+	}
+
+	@Override
+	public void setComment(Comment comment) throws ClassNotFoundException, DAOException {
+		CommentSetter setter = new CommentSetter();
+		setter.setComment(comment);
+		
 	}
 
 }

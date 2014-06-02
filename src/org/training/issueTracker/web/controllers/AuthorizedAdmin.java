@@ -3,6 +3,7 @@ package org.training.issueTracker.web.controllers;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.training.issueTracker.beans.Issue;
 import org.training.issueTracker.service.DAO.DAOInterfaces.DAOInterface;
 import org.training.issueTracker.service.DAO.JDBC.DBImplDAO;
@@ -67,7 +69,7 @@ public class AuthorizedAdmin extends HttpServlet {
 			
 			defectList = defectSearcher.getListIssuesbyUser(email, capacity);
 		
-		} catch (DAOException | SAXException e) {
+		} catch (DAOException | SAXException | ClassNotFoundException e) {
 			
 			session.setAttribute(CAUSE, e.getMessage());
 			jump(DAO_ERROR_PAGE,req,res);

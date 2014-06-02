@@ -1,8 +1,10 @@
 package org.training.issueTracker.web.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,18 +12,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.training.issueTracker.beans.Issue;
+import org.training.issueTracker.service.DAO.DAOInterfaces.DAOInterface;
+import org.training.issueTracker.service.DAO.JDBC.ConnectionDB;
+import org.training.issueTracker.service.DAO.JDBC.DBImplDAO;
+import org.training.issueTracker.service.DAO.exceptions.DAOException;
 import org.training.issueTracker.service.comparators.StringFieldIssueComparator;
+import org.training.issueTracker.service.constants.RoleConst;
+import org.xml.sax.SAXException;
 
 /**
  * Servlet implementation class StringIssueComparator
  */
-@WebServlet("/StringFieldIssueSorter")
-public class StringFieldIssueSorter extends HttpServlet {
-	
-	private final String ADMIN = "admin";
-	private final String USER = "user";
-	private final String GUEST = "guest";
+@WebServlet("/IssueFieldSorter")
+public class IssueFieldSorter extends HttpServlet {
 	private final String ROLE = "role";
 	private final String SORT_BY = "sortColumn";
 	private final String  DEFECT_LIST = "defectList";
@@ -29,12 +34,14 @@ public class StringFieldIssueSorter extends HttpServlet {
 	private final String USER_PAGE ="/autorizedUserPage.jsp";
 	private final String START_PAGE ="/startPage.jsp";
 	private final String ERR_PAGE ="/errorLoginPage.jsp";
+	private final String CAUSE = "cause";
+	private final String DAO_ERROR_PAGE = "/DAOErrPage.jsp";	
 
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public StringFieldIssueSorter() {
+    public IssueFieldSorter() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -55,30 +62,46 @@ public class StringFieldIssueSorter extends HttpServlet {
 	
 	protected void performTask(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		
+		int capacity = 10;
+		
+		List<Issue> defectList = new ArrayList<>();
+		
 		HttpSession session = req.getSession();
 		
 		String role = (String)session.getAttribute(ROLE);
 
 		String key = (String)req.getParameter(SORT_BY);
-		List<Issue> defectList = (List<Issue>)session.getAttribute(DEFECT_LIST);
+		
+			
+		
+		DAOInterface defectSearcher = new DBImplDAO();
+		try {
+			
+			
+			defectList = defectSearcher.getSortedListIssue(key, capacity);
 		
 
-		Collections.sort(defectList,new StringFieldIssueComparator(key));
-	
-		session.setAttribute(DEFECT_LIST, defectList);
+
+		} catch (DAOException | ClassNotFoundException e) {
+			session.setAttribute(CAUSE, e.getMessage());
+			jump(DAO_ERROR_PAGE,req,res);
+			return;
+		} 
+						
+			req.setAttribute(DEFECT_LIST, defectList);
 		
 	
 		if (role!=null){
-			if(role.equals(ADMIN)){	
+			if(role.equals(RoleConst.ADMIN)){	
 				jump(ADMIN_PAGE, req, res);
 				
 
 			}
-			if(role.equals(USER)){	
+			if(role.equals(RoleConst.USER)){	
 				jump(USER_PAGE, req, res);
 					
 			}
-			if(role.equals(GUEST)){	
+			if(role.equals(RoleConst.GUEST)){	
 				jump(START_PAGE, req, res);
 				
 			}

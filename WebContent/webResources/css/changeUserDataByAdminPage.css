@@ -42,13 +42,18 @@ div.role {
 }
 div.button {
 	
-text-align: center;
+	padding: 30px 0 0 100px;
 	margin:  0 auto;
+	
 }
 .description {
-	text-align: center;
+	
+	padding:70px 0 30px 50px;
 	font-size: 17px;
 }
 .firstName input , .lastName input , .email input , .role input {
 	width: 250px;
+}
+select {
+		width: 255px;
 }

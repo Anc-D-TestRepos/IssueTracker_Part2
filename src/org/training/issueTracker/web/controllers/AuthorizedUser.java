@@ -65,7 +65,7 @@ public class AuthorizedUser extends HttpServlet {
 			
 			
 			defectList = defectSearcher.getListIssuesbyUser(email, capacity);
-		} catch (DAOException | SAXException e) {
+		} catch (DAOException | SAXException | ClassNotFoundException e) {
 			
 			session.setAttribute(CAUSE, e.getMessage());
 			jump(DAO_ERROR_PAGE,req,res);
